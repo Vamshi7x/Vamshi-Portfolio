@@ -4,7 +4,7 @@ A modern, fast, and fully responsive developer portfolio showcasing engineering 
 
 Designed for an **AI/ML Engineer & Full Stack AI Developer** using a tri-color light-first aesthetic (Blue + Orange + Green).
 
-🔗 **Live Portfolio**: `http://localhost:5173` (Local Dev) / Deployed via Vercel/Netlify.
+🔗 **Live Portfolio**: [vamshi-portfolio-swart.vercel.app](https://vamshi-portfolio-swart.vercel.app/)
 📄 **Formal Resume**: Available in [public/resume.pdf](public/resume.pdf)
 
 ---
