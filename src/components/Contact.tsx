@@ -31,17 +31,41 @@ export default function Contact() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
 
     setStatus('submitting');
     
-    // Simulate API call (e.g. Formspree/EmailJS)
-    setTimeout(() => {
-      setStatus('success');
-      setFormData({ name: '', email: '', message: '' });
-    }, 1500);
+    try {
+      const accessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || "YOUR_ACCESS_KEY_HERE";
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: accessKey,
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          subject: `New Message from ${formData.name} via Portfolio`,
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok && data.success) {
+        setStatus('success');
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        console.error("Web3Forms submission failed:", data);
+        setStatus('error');
+      }
+    } catch (err) {
+      console.error("Contact form error:", err);
+      setStatus('error');
+    }
   };
 
   return (
@@ -241,6 +265,16 @@ export default function Contact() {
                       </span>
                     )}
                   </div>
+
+                  {status === 'error' && (
+                    <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/5 text-red-650 dark:text-red-400 text-sm flex items-center gap-3">
+                      <AlertCircle className="h-5 w-5 shrink-0 text-red-500" />
+                      <div>
+                        <p className="font-semibold">Transmission Failed</p>
+                        <p className="text-xs mt-0.5 opacity-90">Please check your network, ensure VITE_WEB3FORMS_ACCESS_KEY is set, or try again.</p>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Submit Button */}
                   <button
